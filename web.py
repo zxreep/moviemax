@@ -58,7 +58,7 @@ async def webhook(request: Request):
 
 
 @app.get("/player", response_class=HTMLResponse)
-async def player(request: Request, tmdb_id: int, type: str):
+async def player(request: Request, tmdb: int, type: str):
     media_type = type.lower()
     if media_type not in {"movie", "tv"}:
         raise HTTPException(status_code=400, detail="type must be movie or tv")
@@ -67,7 +67,7 @@ async def player(request: Request, tmdb_id: int, type: str):
     if not tmdb_api_key:
         raise HTTPException(status_code=500, detail="TMDB_API_KEY not configured")
 
-    url = f"https://api.themoviedb.org/3/{media_type}/{tmdb_id}"
+    url = f"https://api.themoviedb.org/3/{media_type}/{tmdb}"
     params = {"api_key": tmdb_api_key}
 
     try:
@@ -166,7 +166,7 @@ async def player(request: Request, tmdb_id: int, type: str):
     <section class=\"card\">
       <div style=\"width: 100%; max-width: 1000px; margin: 0 auto; aspect-ratio: 16/9;\">
         <iframe
-          src=\"https://screenscape.me/embed?tmdb={tmdb_id}&type={media_type}\"
+          src=\"https://screenscape.me/embed?tmdb={tmdb}&type={media_type}\"
           width=\"100%\"
           height=\"100%\"
           frameborder=\"0\"
