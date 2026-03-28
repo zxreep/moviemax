@@ -117,7 +117,7 @@ def _details_caption(item: MediaItem) -> str:
 
 
 def _player_url(base_url: str, item: MediaItem) -> str:
-    return f"{base_url.rstrip('/')}/player?tmdb_id={item.tmdb_id}&type={item.media_type}"
+    return f"{base_url.rstrip('/')}/player?tmdb={item.tmdb_id}&type={item.media_type}"
 
 
 def _render_results_text(source: str, items: list[MediaItem], page: int, query: str | None = None) -> str:
