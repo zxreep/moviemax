@@ -530,6 +530,7 @@ async def callback_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -
 
 
 async def inline_query_handler(update, context) -> None:
+
     """Handle inline mode lookups (@bot query)."""
     inline_query = (update.inline_query.query or "").strip()
     if not inline_query:

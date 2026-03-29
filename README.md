@@ -4,25 +4,25 @@ Production-ready Telegram movie bot + web player using **python-telegram-bot (as
 
 ## Features
 
-- `/start` welcome flow.
-- Text search via TMDB multi-search (movies + TV only).
-- Inline keyboard result list (10 per page) with `Prev/Next` pagination.
-- Rich media details view with poster, rating, release date, overview.
-- Action buttons:
-  - `▶️ Play` opens hosted player URL.
-  - `🔙 Back` removes details message.
-- `/trending` command (trending movies).
-- `/popular` command (popular movies).
-- Inline mode support (`@your_bot query`) returning top 10 results.
-- Robust error handling for invalid callbacks, empty pages, and TMDB/API failures.
-- No DB: all short-lived state is kept in `context.user_data` only.
+ `/start` welcome flow.
+ Text search via TMDB multi-search (movies + TV only).
+ Inline keyboard result list (10 per page) with `Prev/Next` pagination.
+ Rich media details view with poster, rating, release date, overview.
+ Action buttons:
+ - `▶️ Play` opens hosted player URL.
+ - `🔙 Back` removes details message.
+ - `/trending` command (trending movies).
+ - `/popular` command (popular movies).
+ - Inline mode support (`@your_bot query`) returning top 10 results.
+ - Robust error handling for invalid callbacks, empty pages, and TMDB/API failures.
+ - No DB: all short-lived state is kept in `context.user_data` only.
 
 ## Project Structure
 
-- `bot.py` – telegram bot handlers, TMDB client, keyboard flows.
-- `web.py` – FastAPI app for webhook + `/player` page.
-- `requirements.txt` – dependencies.
-- `Procfile` – Render start command.
+ `bot.py` – telegram bot handlers, TMDB client, keyboard flows.
+ `web.py` – FastAPI app for webhook + `/player` page.
+ `requirements.txt` – dependencies.
+ `Procfile` – Render start command.
 
 ## Environment Variables
 
@@ -31,7 +31,7 @@ Set these in Render:
 - `TELEGRAM_BOT_TOKEN` – Telegram bot token from BotFather.
 - `TMDB_API_KEY` – TMDB API key.
 - `APP_BASE_URL` – your public app root URL (example: `https://moviemax.onrender.com`, **not** `/webhook`).
-- `WEBHOOK_URL` – full webhook URL (example: `https://moviemax.onrender.com/webhook`).
+- `WEBHOOK_URL` – full webhook URL (example: `https://moviemax.onrender.com/webhook`)
 
 ## Local Run
 
