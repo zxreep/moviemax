@@ -53,7 +53,7 @@ uvicorn web:app --reload --host 0.0.0.0 --port 8000
 3. Build command:
    ```bash
    pip install -r requirements.txt
-      ```
+   ```
 4. Start command (already in `Procfile`):
    ```bash
    uvicorn web:app --host 0.0.0.0 --port $PORT
@@ -76,6 +76,9 @@ The page fetches TMDB details and renders:
 - release date
 - overview
 - embedded player iframe:
+
+`https://screenscape.me/embed?tmdb=<tmdb_id>&type=<movie|tv>&s=<season>&e=<episode>` (for TV, defaults to `s=1&e=1` if omitted)
+
 
 ### Docker (Render Docker Service)
 

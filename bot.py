@@ -530,4 +530,78 @@ async def callback_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -
 
 
 async def inline_query_handler(update, context) -> None:
-    """Handle inline mode 
+
+    """Handle inline mode lookups (@bot query)."""
+    inline_query = (update.inline_query.query or "").strip()
+    if not inline_query:
+        return
+
+    tmdb: TMDBClient = context.application.bot_data["tmdb_client"]
+    app_base_url: str = context.application.bot_data["app_base_url"]
+    try:
+        items = await tmdb.multi_search(inline_query, page=1)
+    except httpx.HTTPError:
+        logger.exception("Inline TMDB search failed")
+        return
+
+    results: list[InlineQueryResultArticle] = []
+    for item in items[:10]:
+        description = f"{_media_emoji(item.media_type)} {item.release_date or 'Unknown'} • ⭐ {item.vote_average or 'N/A'}"
+        play_url = _player_url(app_base_url, item)
+        content = InputTextMessageContent(
+            message_text=(
+                f"{_details_caption(item)}\n\n"
+                f"▶️ Watch: {play_url}"
+            ),
+            parse_mode=ParseMode.HTML,
+            disable_web_page_preview=False,
+        )
+        results.append(
+            InlineQueryResultArticle(
+                id=f"{item.media_type}-{item.tmdb_id}",
+                title=f"{_media_emoji(item.media_type)} {item.title}",
+                description=description,
+                input_message_content=content,
+            )
+        )
+
+    await update.inline_query.answer(results=results, cache_time=60)
+
+
+def build_application() -> Application:
+    token = os.getenv("TELEGRAM_BOT_TOKEN")
+    tmdb_api_key = os.getenv("TMDB_API_KEY")
+    app_base_url = os.getenv("APP_BASE_URL")
+
+    if not token:
+        raise RuntimeError("TELEGRAM_BOT_TOKEN is required")
+    if not tmdb_api_key:
+        raise RuntimeError("TMDB_API_KEY is required")
+    if not app_base_url:
+        raise RuntimeError("APP_BASE_URL is required (e.g., https://your-app.onrender.com)")
+
+    application = Application.builder().token(token).build()
+    application.bot_data["tmdb_client"] = TMDBClient(tmdb_api_key)
+    application.bot_data["app_base_url"] = app_base_url
+
+    application.add_handler(CommandHandler("start", start_handler))
+    application.add_handler(CommandHandler("trending", trending_handler))
+    application.add_handler(CommandHandler("popular", popular_handler))
+    application.add_handler(InlineQueryHandler(inline_query_handler))
+    application.add_handler(CallbackQueryHandler(callback_handler))
+    application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, search_text_handler))
+
+    return application
+
+
+async def post_init(application: Application) -> None:
+    webhook_url = os.getenv("WEBHOOK_URL")
+    if webhook_url:
+        await application.bot.set_webhook(webhook_url)
+        logger.info("Webhook set to %s", webhook_url)
+
+
+async def post_shutdown(application: Application) -> None:
+    tmdb: TMDBClient = application.bot_data.get("tmdb_client")
+    if tmdb:
+        await tmdb.close()

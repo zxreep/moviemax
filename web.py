@@ -187,4 +187,3 @@ async def player(request: Request, tmdb_id: int, type: str, s: int | None = None
 </html>
 """
     return HTMLResponse(content=html)
-      
