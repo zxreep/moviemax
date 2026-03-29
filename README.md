@@ -77,9 +77,6 @@ The page fetches TMDB details and renders:
 - overview
 - embedded player iframe:
 
-`https://screenscape.me/embed?tmdb=<tmdb_id>&type=<movie|tv>&s=<season>&e=<episode>` (for TV, defaults to `s=1&e=1` if omitted)
-
-
 ### Docker (Render Docker Service)
 
 If you deploy as a Docker service, this repo now includes a `Dockerfile` that runs:
